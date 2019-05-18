@@ -21,15 +21,15 @@ open class WordpressPost: Codable {
     public let link: String
     public let title: WordpressText
     public let content: WordpressProtectedText
-    public let excerpt: WordpressProtectedText
+    public let excerpt: WordpressProtectedText?
     public let author: Int
-    public let featured_media: Int
-    public let comment_status: String
-    public let ping_status: String
-    public let sticky: Bool
-    public let format: String
-    public let categories: [Int]
-    public let tags: [Int]
+    public let featured_media: Int?
+    public let comment_status: String?
+    public let ping_status: String?
+    public let sticky: Bool?
+    public let format: String?
+    public let categories: [Int]?
+    public let tags: [Int]?
     public let _links: WordpressLinks
     public var _embedded: WordpressEmbeddedPost?
 }

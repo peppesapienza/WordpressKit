@@ -11,10 +11,8 @@ import UIKit
 
 public class Wordpress {
     
-    fileprivate init() { }
-    
-    public static func initialize(root: String, namespace: String = "/wp/v2") {
-        guard let _ = URL.init(string: root) else {
+    public init(root: String, namespace: String = "/wp/v2") {
+        guard let root = URL.init(string: root) else {
             fatalError(WordpressResponseError.rootNotConvertableToURL.localizedDescription)
         }
         
@@ -22,11 +20,18 @@ public class Wordpress {
         self.namespace = namespace
     }
     
-    internal static var root: String!
-    internal static var namespace: String!
+    fileprivate let root: URL
+    fileprivate let namespace: String
     
-    public static func get(endpoint: WordpressEndpoint) -> WordpressGetRequest {
-        return WordpressGetRequest.init(endpoint: endpoint)
+    func baseURL() -> URL {
+        return self.root.appendingPathComponent(self.namespace)
+    }
+    
+    public func get(endpoint: WordpressEndpoint) -> WordpressGetRequest {
+        return WordpressGetRequest.init(
+            baseURL: self.baseURL(),
+            endpoint: endpoint
+        )
     }
     
 }

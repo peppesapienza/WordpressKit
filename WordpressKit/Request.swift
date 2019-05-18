@@ -10,29 +10,32 @@ import Foundation
 
 
 public protocol WordpressTask {
-    typealias Result<T> = (WordpressResult<T>) -> ()
+    typealias ResultHandler<T> = (WordpressResult<T>) -> ()
     
     @discardableResult
-    func json(result: @escaping Result<Any>) -> Self
+    func json(result: @escaping ResultHandler<Any>) -> Self
     
     @discardableResult
-    func string(result: @escaping Result<String>) -> Self
+    func string(result: @escaping ResultHandler<String>) -> Self
     
     @discardableResult
-    func data(result: @escaping Result<Data>) -> Self
+    func data(result: @escaping ResultHandler<Data>) -> Self
     
     @discardableResult
-    func decode<T>(type: T.Type, result: @escaping Result<T>) -> Self where T: Decodable
+    func decode<T>(type: T.Type, result: @escaping ResultHandler<T>) -> Self where T: Decodable
 }
 
 public class WordpressGetRequest: WordpressTask {
     
-    internal init(endpoint: WordpressEndpoint) {
+    internal init(baseURL: URL, endpoint: WordpressEndpoint) {
+        self.baseURL = baseURL
         self.endpoint = endpoint
         self.queries = WordpressQueryItems.init()
     }
     
-    fileprivate var endpoint: WordpressEndpoint
+    fileprivate let baseURL: URL
+    fileprivate let endpoint: WordpressEndpoint
+    
     fileprivate var queries: WordpressQueryItems
     
     fileprivate lazy var sessionManager = WordpressSessionManager.init(request: self)
@@ -40,6 +43,11 @@ public class WordpressGetRequest: WordpressTask {
     
     fileprivate lazy var session: URLSession = {
         let configuration = URLSessionConfiguration.default
+        configuration.httpAdditionalHeaders = [
+            "Content-Type" : "application/json",
+            "User-Agent" : "iOS WordpressKit"
+        ]
+        
         NotificationCenter
             .default
             .addObserver(self,
@@ -56,28 +64,28 @@ public class WordpressGetRequest: WordpressTask {
     fileprivate var handlers: [WordpressRequestHandlerExecutable] = []
 
     @discardableResult
-    public func json(result: @escaping Result<Any>) -> Self {
+    public func json(result: @escaping ResultHandler<Any>) -> Self {
         self.handlers.append(JsonHandler.init(operation: result))
         self.resume()
         return self
     }
     
     @discardableResult
-    public func string(result: @escaping Result<String>) -> Self {
+    public func string(result: @escaping ResultHandler<String>) -> Self {
         self.handlers.append(StringHandler.init(operation: result))
         self.resume()
         return self
     }
     
     @discardableResult
-    public func data(result: @escaping Result<Data>) -> Self {
+    public func data(result: @escaping ResultHandler<Data>) -> Self {
         self.handlers.append(DataHandler.init(operation: result))
         self.resume()
         return self
     }
     
     @discardableResult
-    public func decode<T>(type: T.Type, result: @escaping Result<T>) -> Self where T: Decodable {
+    public func decode<T>(type: T.Type, result: @escaping ResultHandler<T>) -> Self where T: Decodable {
         self.handlers.append(DecodeHandler.init(type: type, operation: result))
         self.resume()
         return self
@@ -100,9 +108,11 @@ public class WordpressGetRequest: WordpressTask {
         do {
             defer { self.isResumed = true }
             let queries = self.queries.value()
-            let url = try URLComposer.init(endpoint: self.endpoint, queries: queries).value()
-            self.session.dataTask(with: url).resume()
+            let url = try WordpressFinalPath.init(baseURL: self.baseURL, endpoint: self.endpoint, queries: queries).url()
+            let request = URLRequest.init(url: url)
+            self.session.dataTask(with: request).resume()
         } catch let e {
+            self.isResumed = false
             print(e)
         }
         

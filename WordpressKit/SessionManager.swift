@@ -56,6 +56,7 @@ class WordpressSessionManager: NSObject, URLSessionDataDelegate, URLSessionTaskD
         NotificationCenter.default.post(name: .sessionDidComplete, object: self, userInfo: [
             "data" : data
         ])
+        
     }
     
     func urlSession(_ session: URLSession,

@@ -12,16 +12,17 @@ import XCTest
 class Request: XCTestCase {
     
     let timeout: TimeInterval = 10
+    var wordpress: Wordpress!
     
     override func setUp() {
         super.setUp()
-        Wordpress.initialize(root: "https://ispazio.net/", namespace: "xcodingapi/wp/v2")
+        self.wordpress = Wordpress.init(root: "https://ispazio.net/", namespace: "xcodingapi/wp/v2")
     }
     
     func test_posts_string() {
         let expectation = self.expectation(description: "request string result")
         
-        Wordpress.get(endpoint: .posts).string { result in
+        self.wordpress.get(endpoint: .posts).string { result in
             switch result {
             case .value(let s): XCTAssert(!s.isEmpty)
             case .error(let e): XCTFail(e.localizedDescription)
@@ -35,7 +36,7 @@ class Request: XCTestCase {
     func test_posts_decode() {
         let expectation = self.expectation(description: "request string result")
         
-        Wordpress.get(endpoint: .posts).embed().decode(type: [WordpressPost].self) { (result) in
+        self.wordpress.get(endpoint: .posts).embed().decode(type: [WordpressPost].self) { (result) in
             switch result {
             case .value(let array):
                 XCTAssert(!array.isEmpty)
@@ -52,14 +53,15 @@ class Request: XCTestCase {
     func test_posts_query_decode() {
         let expectation = self.expectation(description: "request string result")
         
-        Wordpress
+        self.wordpress
             .get(endpoint: .post(id: "1863739"))
             .embed()
             .decode(type: WordpressPost.self)
         { (result) in
             switch result {
             case .value(let post):
-                print(post.date, post.date_gmt)
+                print(post.title)
+                XCTAssert(post.title.rendered == "Shortcuts: scopriamo ed impariamo ad utilizzare la nuova applicazione di iOS 12 in un FOCUS completo di iSpazio")
             default: return
             }
             expectation.fulfill()
@@ -71,7 +73,7 @@ class Request: XCTestCase {
     func test_posts_json() {
         let expectation = self.expectation(description: "request json result")
 
-        Wordpress.get(endpoint: .media).json { result in
+        self.wordpress.get(endpoint: .media).json { result in
             switch result {
             case .value(let object):
                 print(object)

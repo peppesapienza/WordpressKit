@@ -26,8 +26,8 @@ public struct WordpressMedia: Codable {
 }
 
 public struct WordpressMediaDetails: Codable {
-    public let width: Double
-    public let height: Double
+    //public let width: Double
+    //public let height: Double
     public let file: String
     public let sizes: WordpressMediaSizes
 }
@@ -42,8 +42,8 @@ public struct WordpressMediaSizes: Codable {
 
 public struct WordpressMediaSize: Codable {
     public let file: String
-    public let width: Double
-    public let height: Double
-    public let mime_type: String
+    //public let width: Double
+    //public let height: Double
+    public let mime_type: String?
     public let source_url: String
 }

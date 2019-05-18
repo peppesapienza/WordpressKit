@@ -9,8 +9,8 @@
 import Foundation
 
 public enum WordpressResult<T> {
-    case value(_ : T)
-    case error(_ : Error)
+    case value(T)
+    case error(Error)
 }
 
 public enum WordpressResponseError: Error, LocalizedError {
