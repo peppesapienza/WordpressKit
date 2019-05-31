@@ -30,7 +30,7 @@ open class WordpressPost: Codable {
     public let format: String?
     public let categories: [Int]?
     public let tags: [Int]?
-    public let _links: WordpressLinks
+    public let _links: WordpressLinks?
     public var _embedded: WordpressEmbeddedPost?
 }
 
