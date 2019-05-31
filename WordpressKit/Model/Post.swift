@@ -69,12 +69,12 @@ public struct WordpressEmbeddedPost: Codable {
 }
 
 public struct WordpressAuthor: Codable {
-    public let id: Int
-    public let name: String
-    public let url: String
-    public let description: String
-    public let link: String
-    public let slug: String
+    public let id: Int?
+    public let name: String?
+    public let url: String?
+    public let description: String?
+    public let link: String?
+    public let slug: String?
     public let avatar_urls: [Int:String]?
 }
 
@@ -84,7 +84,7 @@ public struct WordpressText: Codable {
 
 public struct WordpressProtectedText: Codable {
     public let rendered: String
-    public let protected: Bool
+    public let protected: Bool?
 }
 
 public struct WordpressLink: Codable {

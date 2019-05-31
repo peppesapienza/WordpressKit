@@ -34,14 +34,15 @@ class Request: XCTestCase {
     }
     
     func test_posts_decode() {
-        let expectation = self.expectation(description: "request string result")
+        let expectation = self.expectation(description: "request posts decode")
         
         self.wordpress.get(endpoint: .posts).embed().decode(type: [WordpressPost].self) { (result) in
             switch result {
             case .value(let array):
                 XCTAssert(!array.isEmpty)
                 
-            case .error(let e): XCTFail(e.localizedDescription)
+            case .error(let e):
+                XCTFail(e.localizedDescription)
             }
             
             expectation.fulfill()
@@ -50,7 +51,32 @@ class Request: XCTestCase {
         self.waitForExpectations(timeout: timeout, handler: nil)
     }
     
+    
     func test_posts_query_decode() {
+        let expectation = self.expectation(description: "request posts decode with query")
+        
+        self.wordpress
+            .get(endpoint: .posts)
+            .query(key: .page, value: "1")
+            .query(key: .search, value: "")
+            .query(key: .categories, value: "")
+            .decode(type: [WordpressPost].self) { (result) in
+                switch result {
+                case .value(let array):
+                    print(array.count)
+                    XCTAssert(!array.isEmpty)
+                    
+                case .error(let e):
+                    XCTFail(e.localizedDescription)
+                }
+                
+                expectation.fulfill()
+        }
+        
+        self.waitForExpectations(timeout: timeout, handler: nil)
+    }
+    
+    func test_post_query_decode() {
         let expectation = self.expectation(description: "request string result")
         
         self.wordpress
