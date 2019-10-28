@@ -25,17 +25,17 @@ class WordpressSessionManager: NSObject, URLSessionDataDelegate, URLSessionTaskD
     
     func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didReceive data: Data) {
         guard receivedData != nil else {
-            self.receivedData = data
+            receivedData = data
             return
         }
 
-        self.receivedData?.append(data)
+        receivedData?.append(data)
     }
     
     
     func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: Error?) {
         defer {
-            self.request = nil
+            request = nil
             session.invalidateAndCancel()
         }
         
@@ -69,8 +69,7 @@ class WordpressSessionManager: NSObject, URLSessionDataDelegate, URLSessionTaskD
             (200...299).contains(response.statusCode),
             let mimeType = response.mimeType,
             mimeType == "application/json"
-            else
-        {
+        else {
             completionHandler(.cancel)
             return
         }

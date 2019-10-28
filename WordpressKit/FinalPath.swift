@@ -27,7 +27,7 @@ struct WordpressFinalPath {
             resolvingAgainstBaseURL: true)
         else { throw WordpressResponseError.relativePathNotInitialized }
         
-        components.queryItems = self.queries.isEmpty ? nil : self.queries
+        components.queryItems = queries.isEmpty ? nil : queries
         
         guard let url = components.url else {
             throw WordpressResponseError.requestUrlWithQueryNotInitialized

@@ -16,7 +16,7 @@ class Request: XCTestCase {
     
     override func setUp() {
         super.setUp()
-        self.wordpress = Wordpress.init(root: "https://ispazio.net/", namespace: "xcodingapi/wp/v2")
+        wordpress = Wordpress.init(root: "https://www.ilfattoquotidiano.it", namespace: "wp-json/wp/v2")
     }
     
     func test_posts_string() {
@@ -30,13 +30,18 @@ class Request: XCTestCase {
             expectation.fulfill()
         }
         
-        self.waitForExpectations(timeout: timeout, handler: nil)
+        waitForExpectations(timeout: timeout, handler: nil)
     }
     
     func test_posts_decode() {
         let expectation = self.expectation(description: "request posts decode")
         
-        self.wordpress.get(endpoint: .posts).embed().decode(type: [WordpressPost].self) { (result) in
+        wordpress
+            .get(endpoint: .posts)
+            .embed()
+            .decode(type: [WordpressPost].self)
+        { (result) in
+            print(result)
             switch result {
             case .value(let array):
                 XCTAssert(!array.isEmpty)
@@ -48,22 +53,21 @@ class Request: XCTestCase {
             expectation.fulfill()
         }
         
-        self.waitForExpectations(timeout: timeout, handler: nil)
+        waitForExpectations(timeout: timeout, handler: nil)
     }
     
     
     func test_posts_query_decode() {
         let expectation = self.expectation(description: "request posts decode with query")
         
-        self.wordpress
+        wordpress
             .get(endpoint: .posts)
             .query(key: .page, value: "1")
-            .query(key: .search, value: "")
-            .query(key: .categories, value: "")
-            .decode(type: [WordpressPost].self) { (result) in
+            .query(key: .search, value: "Matteo Renzi")
+            .decode(type: [WordpressPost].self)
+        { (result) in
                 switch result {
                 case .value(let array):
-                    print(array.count)
                     XCTAssert(!array.isEmpty)
                     
                 case .error(let e):
@@ -72,34 +76,34 @@ class Request: XCTestCase {
                 
                 expectation.fulfill()
         }
-        
-        self.waitForExpectations(timeout: timeout, handler: nil)
+                
+        waitForExpectations(timeout: timeout, handler: nil)
     }
     
     func test_post_query_decode() {
-        let expectation = self.expectation(description: "request string result")
+        let expectation = self.expectation(description: "request post decode")
         
-        self.wordpress
-            .get(endpoint: .post(id: "1863739"))
+        wordpress
+            .get(endpoint: .post(id: "5508442"))
             .embed()
             .decode(type: WordpressPost.self)
         { (result) in
             switch result {
             case .value(let post):
-                print(post.title)
-                XCTAssert(post.title.rendered == "Shortcuts: scopriamo ed impariamo ad utilizzare la nuova applicazione di iOS 12 in un FOCUS completo di iSpazio")
+                XCTAssert(!post.title.rendered.isEmpty)
+                
             default: return
             }
             expectation.fulfill()
         }
         
-        self.waitForExpectations(timeout: timeout, handler: nil)
+        waitForExpectations(timeout: timeout, handler: nil)
     }
     
     func test_posts_json() {
         let expectation = self.expectation(description: "request json result")
 
-        self.wordpress.get(endpoint: .media).json { result in
+        wordpress.get(endpoint: .media).json { result in
             switch result {
             case .value(let object):
                 print(object)
@@ -110,7 +114,7 @@ class Request: XCTestCase {
             expectation.fulfill()
         }
         
-        self.waitForExpectations(timeout: timeout, handler: nil)
+    waitForExpectations(timeout: timeout, handler: nil)
     }
     
 }

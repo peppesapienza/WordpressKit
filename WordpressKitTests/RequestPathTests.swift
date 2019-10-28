@@ -11,16 +11,17 @@ import XCTest
 
 class RequestPathTests: XCTestCase {
     
-    let wordpress = Wordpress.init(root: "https://ispazio.net/", namespace: "xcodingapi/wp/v2")
+    let wordpress = Wordpress.init(root: "https://www.ilfattoquotidiano.it", namespace: "wp-json/wp/v2")
     
     override func setUp() {
         super.setUp()
     }
     
     func test_base_url() {
-        XCTAssert(wordpress.baseURL().absoluteString == "https://ispazio.net/xcodingapi/wp/v2")
+        XCTAssertTrue(wordpress.baseURL().pathComponents.elementsEqual(["/", "wp-json", "wp", "v2"]))
     }
 
+    
     func test_url_query() {
         do {
             var items = WordpressQueryItems.init()
@@ -28,8 +29,9 @@ class RequestPathTests: XCTestCase {
             items.add(key: .per_page, value: "10")
             let path = WordpressFinalPath.init(baseURL: wordpress.baseURL(), endpoint: .posts, queries: items.value())
             let url = try path.url()
-            print(url.absoluteString)
-            XCTAssert(url.absoluteString ==  wordpress.baseURL().absoluteString + "/posts?per_page=10&_embed=1")
+            XCTAssertNotNil(url.query)
+            XCTAssertTrue(url.query!.contains("_embed=1"))
+            XCTAssertTrue(url.query!.contains("per_page=10"))
         } catch let e {
             XCTFail(e.localizedDescription)
         }

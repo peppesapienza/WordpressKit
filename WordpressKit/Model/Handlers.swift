@@ -8,15 +8,6 @@
 
 import Foundation
 
-protocol WordpressRequestHandler {
-    associatedtype T
-    var operation: (T) -> () { get set }
-}
-
-protocol WordpressRequestHandlerExecutable {
-    func execute(data: Data?, error: Error?)
-}
-
 struct JsonHandler: WordpressRequestHandler, WordpressRequestHandlerExecutable {
     var operation: (WordpressResult<Any>) -> ()
     
@@ -66,8 +57,7 @@ struct DecodeHandler<Element: Decodable>: WordpressRequestHandler, WordpressRequ
         }
         
         do {
-            let decoder = JSONDecoder.init()
-            let result = try decoder.decode(Element.self, from: data!)
+            let result = try JSONDecoder().decode(Element.self, from: data!)
             operation(WordpressResult.value(result))
         } catch let e {
             operation(WordpressResult.error(e))

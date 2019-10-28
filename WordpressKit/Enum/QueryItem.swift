@@ -34,16 +34,14 @@ public enum WordpressQueryKey: String {
 
 struct WordpressQueryItems {
     
-    var dict: [WordpressQueryKey: String] = [:]
+    fileprivate var dict: [WordpressQueryKey: String] = [:]
     
     mutating func add(key: WordpressQueryKey, value: String) {
-        self.dict.updateValue(value, forKey: key)
+        dict.updateValue(value, forKey: key)
     }
     
     func value() -> [URLQueryItem] {
-        return self.dict.map { (key, val) -> URLQueryItem in
-            return URLQueryItem.init(name: key.rawValue, value: val)
-        }
+        dict.map({ URLQueryItem.init(name: $0.rawValue, value: $1) })
     }
     
     fileprivate func toString(_ array: [String]) -> String {

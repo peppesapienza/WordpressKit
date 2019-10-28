@@ -24,12 +24,12 @@ public class Wordpress {
     fileprivate let namespace: String
     
     func baseURL() -> URL {
-        return self.root.appendingPathComponent(self.namespace)
+        return root.appendingPathComponent(namespace)
     }
     
     public func get(endpoint: WordpressEndpoint) -> WordpressGetRequest {
         return WordpressGetRequest.init(
-            baseURL: self.baseURL(),
+            baseURL: baseURL(),
             endpoint: endpoint
         )
     }
