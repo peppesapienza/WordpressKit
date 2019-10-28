@@ -69,7 +69,7 @@ public struct WordpressEmbeddedPost: Codable {
 }
 
 public struct WordpressAuthor: Codable {
-    public let id: Int?
+    public let id: Int
     public let name: String?
     public let url: String?
     public let description: String?
@@ -103,10 +103,10 @@ public struct WordpressTerm: Codable {
 }
 
 public struct WordpressEmbeddedTerm: Codable {
-    public let id: Int
-    public let link: String
-    public let name: String
-    public let slug: String
-    public let taxonomy: String
-    public let _links: WordpressLinks
+    public let id: Int?
+    public let link: String?
+    public let name: String?
+    public let slug: String?
+    public let taxonomy: String?
+    public let _links: WordpressLinks?
 }
