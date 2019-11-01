@@ -11,7 +11,7 @@
 		E30E032720C7038B002DC3EE /* RequestPathTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E30E032620C7038B002DC3EE /* RequestPathTests.swift */; };
 		E30E032920C7038B002DC3EE /* WordpressKit.h in Headers */ = {isa = PBXBuildFile; fileRef = E30E031B20C7038A002DC3EE /* WordpressKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		E30E033420C703A1002DC3EE /* Wordpress.swift in Sources */ = {isa = PBXBuildFile; fileRef = E30E033320C703A1002DC3EE /* Wordpress.swift */; };
-		E30E034020C7DCB9002DC3EE /* Request.swift in Sources */ = {isa = PBXBuildFile; fileRef = E30E033F20C7DCB9002DC3EE /* Request.swift */; };
+		E30E034020C7DCB9002DC3EE /* GetRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = E30E033F20C7DCB9002DC3EE /* GetRequest.swift */; };
 		E3777BC720D469890090E692 /* SessionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3777BC620D469890090E692 /* SessionManager.swift */; };
 		E38B094C20CD66F8001377C0 /* Request.swift in Sources */ = {isa = PBXBuildFile; fileRef = E38B094B20CD66F8001377C0 /* Request.swift */; };
 		E3B8963F229059FC0015C2E5 /* FinalPath.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3B8963E229059FC0015C2E5 /* FinalPath.swift */; };
@@ -43,7 +43,7 @@
 		E30E032620C7038B002DC3EE /* RequestPathTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequestPathTests.swift; sourceTree = "<group>"; };
 		E30E032820C7038B002DC3EE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		E30E033320C703A1002DC3EE /* Wordpress.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Wordpress.swift; sourceTree = "<group>"; };
-		E30E033F20C7DCB9002DC3EE /* Request.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Request.swift; sourceTree = "<group>"; };
+		E30E033F20C7DCB9002DC3EE /* GetRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetRequest.swift; sourceTree = "<group>"; };
 		E3777BC620D469890090E692 /* SessionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionManager.swift; sourceTree = "<group>"; };
 		E38B094B20CD66F8001377C0 /* Request.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Request.swift; sourceTree = "<group>"; };
 		E3B8963E229059FC0015C2E5 /* FinalPath.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FinalPath.swift; sourceTree = "<group>"; };
@@ -102,7 +102,7 @@
 				F484986522E066DA002E8546 /* Enum */,
 				F484985C22E066AE002E8546 /* Model */,
 				E30E033320C703A1002DC3EE /* Wordpress.swift */,
-				E30E033F20C7DCB9002DC3EE /* Request.swift */,
+				E30E033F20C7DCB9002DC3EE /* GetRequest.swift */,
 				E3777BC620D469890090E692 /* SessionManager.swift */,
 				E3B8963E229059FC0015C2E5 /* FinalPath.swift */,
 				E30E033E20C7DC94002DC3EE /* Other */,
@@ -280,7 +280,7 @@
 				E3777BC720D469890090E692 /* SessionManager.swift in Sources */,
 				F433A1242366DEBC0035265F /* RequestHandler.swift in Sources */,
 				E3B8963F229059FC0015C2E5 /* FinalPath.swift in Sources */,
-				E30E034020C7DCB9002DC3EE /* Request.swift in Sources */,
+				E30E034020C7DCB9002DC3EE /* GetRequest.swift in Sources */,
 				F484986B22E066DA002E8546 /* Endpoint.swift in Sources */,
 				F4CBF6EC2364421D00322702 /* WordpressTask.swift in Sources */,
 				F484986A22E066DA002E8546 /* ResponseError.swift in Sources */,

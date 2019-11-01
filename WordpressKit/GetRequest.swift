@@ -22,7 +22,8 @@ public class WordpressGetRequest: WordpressGetTask {
     fileprivate var queries: WordpressQueryItems
     
     fileprivate lazy var sessionManager = WordpressSessionManager(delegate: self)
-    fileprivate lazy var sessionQueue = OperationQueue.init()
+    fileprivate lazy var sessionQueue = OperationQueue()
+    fileprivate var sessionDataTask: URLSessionDataTask?
     
     fileprivate lazy var session: URLSession = {
         let configuration = URLSessionConfiguration.default
@@ -81,17 +82,16 @@ public class WordpressGetRequest: WordpressGetTask {
     }
     
     fileprivate func url() throws -> URL {
-        return try WordpressFinalPath.init(baseURL: baseURL, endpoint: endpoint, queries: queries.value()).url()
+        return try WordpressFinalPath(baseURL: baseURL, endpoint: endpoint, queries: queries.value()).url()
     }
     
     fileprivate func resume() {
-        guard !isResumed else { return }
+        guard sessionDataTask == nil else { return }
         do {
-            defer { isResumed = true }
-            session.dataTask(with: URLRequest.init(url: try url())).resume()
+            sessionDataTask = session.dataTask(with: URLRequest(url: try url()))
+            sessionDataTask?.resume()
         } catch {
             print("[🤬][Error] \(error)")
-            isResumed = false
         }
         
     }
