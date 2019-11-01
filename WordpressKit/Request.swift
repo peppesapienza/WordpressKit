@@ -21,7 +21,7 @@ public class WordpressGetRequest: WordpressTask {
     
     fileprivate var queries: WordpressQueryItems
     
-    fileprivate lazy var sessionManager = WordpressSessionManager.init(request: self)
+    fileprivate lazy var sessionManager = WordpressSessionManager(delegate: self)
     fileprivate lazy var sessionQueue = OperationQueue.init()
     
     fileprivate lazy var session: URLSession = {
@@ -30,13 +30,6 @@ public class WordpressGetRequest: WordpressTask {
             "Content-Type" : "application/json"
         ]
         
-        NotificationCenter
-            .default
-            .addObserver(self,
-                         selector: #selector(WordpressGetRequest.handleSessionComplete),
-                         name: .sessionDidComplete,
-                         object: sessionManager)
-        
         return URLSession.init(
             configuration: configuration,
             delegate: sessionManager,
@@ -44,33 +37,33 @@ public class WordpressGetRequest: WordpressTask {
     }()
     
     fileprivate var isResumed: Bool = false
-    fileprivate var handlers: [WordpressRequestHandlerExecutable] = []
+    fileprivate var handlers: [WordpressRequestHandlerExecutable] = [] {
+        didSet {
+            resume()
+        }
+    }
 
     @discardableResult
     public func json(result: @escaping ResultHandler<Any>) -> Self {
-        handlers.append(JsonHandler.init(operation: result))
-        resume()
+        handlers.append(JsonHandler(operation: result))
         return self
     }
     
     @discardableResult
     public func string(result: @escaping ResultHandler<String>) -> Self {
-        handlers.append(StringHandler.init(operation: result))
-        resume()
+        handlers.append(StringHandler(operation: result))
         return self
     }
     
     @discardableResult
     public func data(result: @escaping ResultHandler<Data>) -> Self {
-        handlers.append(DataHandler.init(operation: result))
-        resume()
+        handlers.append(DataHandler(operation: result))
         return self
     }
     
     @discardableResult
     public func decode<T>(type: T.Type, result: @escaping ResultHandler<T>) -> Self where T: Decodable {
-        handlers.append(DecodeHandler.init(type: type, operation: result))
-        resume()
+        handlers.append(DecodeHandler(type: type, operation: result))
         return self
     }
     
@@ -101,23 +94,23 @@ public class WordpressGetRequest: WordpressTask {
         }
         
     }
-    
-    @objc fileprivate func handleSessionComplete(_ sender: Notification) {
-        DispatchQueue.main.async {
-            if let error = sender.userInfo?["error"] as? Error {
-                self.handlers.forEach({ $0.execute(data: nil, error: error) })
-                return
-            }
-            
-            if let data = sender.userInfo?["data"] as? Data {
-                self.handlers.forEach({ $0.execute(data: data, error: nil) })
-            }
-        }
-    }
 
     deinit {
-        NotificationCenter.default.removeObserver(self)
         print("[🔥] WordpressRequest deinit")
+    }
+    
+}
+
+
+extension WordpressGetRequest: WordpressTaskDelegate {
+    
+    func wordpressTask(data: Data?, didCompleteWith error: Error?) {
+        guard let data = data else {
+            self.handlers.forEach({ $0.execute(data: nil, error: error!) })
+            return
+        }
+        
+        self.handlers.forEach({ $0.execute(data: data, error: nil) })
     }
     
 }

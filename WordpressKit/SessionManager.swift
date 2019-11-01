@@ -8,19 +8,14 @@
 
 import Foundation
 
-extension Notification.Name {
-    static let sessionDidComplete = Notification.Name(rawValue: "sessionDidComplete")
-}
-
-
 class WordpressSessionManager: NSObject, URLSessionDataDelegate, URLSessionTaskDelegate {
     
-    init(request: WordpressGetRequest) {
-        self.request = request
+    init(delegate: WordpressTaskDelegate) {
+        self.delegate = delegate
         super.init()
     }
     
-    fileprivate var request: WordpressGetRequest?
+    fileprivate var delegate: WordpressTaskDelegate?
     fileprivate var receivedData: Data?
     
     func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didReceive data: Data) {
@@ -35,28 +30,11 @@ class WordpressSessionManager: NSObject, URLSessionDataDelegate, URLSessionTaskD
     
     func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: Error?) {
         defer {
-            request = nil
+            delegate = nil
             session.invalidateAndCancel()
         }
         
-        guard error == nil else {
-            NotificationCenter.default.post(name: .sessionDidComplete, object: self, userInfo: [
-                "error" : error!
-            ])
-            return
-        }
-        
-        guard let data = self.receivedData else {
-            NotificationCenter.default.post(name: .sessionDidComplete, object: self, userInfo: [
-                "error" : WordpressResponseError.sessionDataIsNil
-            ])
-            return
-        }
-        
-        NotificationCenter.default.post(name: .sessionDidComplete, object: self, userInfo: [
-            "data" : data
-        ])
-        
+        delegate?.wordpressTask(data: receivedData, didCompleteWith: error)
     }
     
     func urlSession(_ session: URLSession,

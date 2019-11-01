@@ -11,12 +11,12 @@ import XCTest
 
 class Request: XCTestCase {
     
-    let timeout: TimeInterval = 10
+    let timeout: TimeInterval = 15
     var wordpress: Wordpress!
     
     override func setUp() {
         super.setUp()
-        wordpress = Wordpress.init(root: "https://www.ilfattoquotidiano.it", namespace: "wp-json/wp/v2")
+        wordpress = Wordpress(root: "https://www.ilfattoquotidiano.it", namespace: "wp-json/wp/v2")
     }
     
     func test_posts_string() {
@@ -44,6 +44,7 @@ class Request: XCTestCase {
             print(result)
             switch result {
             case .value(let array):
+                // array.forEach({print( $0.title.rendered )})
                 XCTAssert(!array.isEmpty)
                 
             case .error(let e):
@@ -63,7 +64,7 @@ class Request: XCTestCase {
         wordpress
             .get(endpoint: .posts)
             .query(key: .page, value: "1")
-            .query(key: .search, value: "Matteo Renzi")
+            .query(key: .search, value: "casa")
             .decode(type: [WordpressPost].self)
         { (result) in
                 switch result {
