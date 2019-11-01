@@ -107,7 +107,6 @@ class Request: XCTestCase {
         wordpress.get(endpoint: .media).json { result in
             switch result {
             case .value(let object):
-                print(object)
                 XCTAssert(object is NSArray)
             case .error(let e): XCTFail(e.localizedDescription)
             }

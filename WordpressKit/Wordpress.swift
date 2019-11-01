@@ -27,8 +27,8 @@ public class Wordpress {
         return root.appendingPathComponent(namespace)
     }
     
-    public func get(endpoint: WordpressEndpoint) -> WordpressGetRequest {
-        return WordpressGetRequest.init(
+    public func get(endpoint: WordpressEndpoint) -> WordpressGetTask {
+        return WordpressGetRequest(
             baseURL: baseURL(),
             endpoint: endpoint
         )

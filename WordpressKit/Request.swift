@@ -8,7 +8,7 @@
 
 import Foundation
 
-public class WordpressGetRequest: WordpressTask {
+public class WordpressGetRequest: WordpressGetTask {
     
     internal init(baseURL: URL, endpoint: WordpressEndpoint) {
         self.baseURL = baseURL
@@ -74,6 +74,7 @@ public class WordpressGetRequest: WordpressTask {
         return self
     }
     
+    @discardableResult
     public func embed() -> Self {
         queries.add(key: ._embed, value: "1")
         return self

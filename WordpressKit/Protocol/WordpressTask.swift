@@ -10,7 +10,9 @@ import Foundation
 
 public protocol WordpressTask {
     typealias ResultHandler<T> = (WordpressResult<T>) -> ()
-    
+}
+
+public protocol WordpressGetTask: WordpressTask {
     @discardableResult
     func json(result: @escaping ResultHandler<Any>) -> Self
     
@@ -22,6 +24,12 @@ public protocol WordpressTask {
     
     @discardableResult
     func decode<T>(type: T.Type, result: @escaping ResultHandler<T>) -> Self where T: Decodable
+    
+    @discardableResult
+    func query(key: WordpressQueryKey, value: String) -> Self
+    
+    @discardableResult
+    func embed() -> Self
 }
 
 protocol WordpressTaskDelegate {
