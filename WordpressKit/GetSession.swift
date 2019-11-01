@@ -8,7 +8,7 @@
 
 import Foundation
 
-public class WordpressGetRequest: WordpressGetTask {
+class WordpressGet: WordpressGetSession {
     
     internal init(baseURL: URL, endpoint: WordpressEndpoint) {
         self.baseURL = baseURL
@@ -18,7 +18,6 @@ public class WordpressGetRequest: WordpressGetTask {
     
     fileprivate let baseURL: URL
     fileprivate let endpoint: WordpressEndpoint
-    
     fileprivate var queries: WordpressQueryItems
     
     fileprivate lazy var sessionManager = WordpressSessionManager(delegate: self)
@@ -31,15 +30,14 @@ public class WordpressGetRequest: WordpressGetTask {
             "Content-Type" : "application/json"
         ]
         
-        return URLSession.init(
+        return URLSession(
             configuration: configuration,
             delegate: sessionManager,
             delegateQueue: sessionQueue)
     }()
     
-    fileprivate var isResumed: Bool = false
     fileprivate var handlers: [WordpressRequestHandlerExecutable] = [] {
-        didSet {
+        willSet {
             resume()
         }
     }
@@ -103,15 +101,10 @@ public class WordpressGetRequest: WordpressGetTask {
 }
 
 
-extension WordpressGetRequest: WordpressTaskDelegate {
+extension WordpressGet: WordpressSessionDelegate {
     
     func wordpressTask(data: Data?, didCompleteWith error: Error?) {
-        guard let data = data else {
-            self.handlers.forEach({ $0.execute(data: nil, error: error!) })
-            return
-        }
-        
-        self.handlers.forEach({ $0.execute(data: data, error: nil) })
+        self.handlers.forEach({ $0.execute(data: data, error: error) })
     }
     
 }

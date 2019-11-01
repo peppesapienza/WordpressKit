@@ -1,5 +1,5 @@
 //
-//  WordpressTask.swift
+//  WordpressSession.swift
 //  WordpressKit
 //
 //  Created by Giuseppe Sapienza on 26/10/2019.
@@ -8,11 +8,11 @@
 
 import Foundation
 
-public protocol WordpressTask {
+public protocol WordpressSession {
     typealias ResultHandler<T> = (WordpressResult<T>) -> ()
 }
 
-public protocol WordpressGetTask: WordpressTask {
+public protocol WordpressGetSession: WordpressSession {
     @discardableResult
     func json(result: @escaping ResultHandler<Any>) -> Self
     
@@ -32,6 +32,6 @@ public protocol WordpressGetTask: WordpressTask {
     func embed() -> Self
 }
 
-protocol WordpressTaskDelegate {
+protocol WordpressSessionDelegate {
     func wordpressTask(data: Data?, didCompleteWith error: Error?)
 }

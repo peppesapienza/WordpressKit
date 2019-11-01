@@ -10,12 +10,12 @@ import Foundation
 
 class WordpressSessionManager: NSObject, URLSessionDataDelegate, URLSessionTaskDelegate {
     
-    init(delegate: WordpressTaskDelegate) {
+    init(delegate: WordpressSessionDelegate) {
         self.delegate = delegate
         super.init()
     }
     
-    fileprivate var delegate: WordpressTaskDelegate?
+    fileprivate var delegate: WordpressSessionDelegate?
     fileprivate var receivedData: Data?
     
     func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didReceive data: Data) {
@@ -33,7 +33,7 @@ class WordpressSessionManager: NSObject, URLSessionDataDelegate, URLSessionTaskD
             delegate = nil
             session.invalidateAndCancel()
         }
-        
+
         delegate?.wordpressTask(data: receivedData, didCompleteWith: error)
     }
     
