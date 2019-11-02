@@ -44,11 +44,4 @@ struct WordpressQueryItems {
         dict.map({ URLQueryItem.init(name: $0.rawValue, value: $1) })
     }
     
-    fileprivate func toString(_ array: [String]) -> String {
-        var result: String = ""
-        array.forEach({result += $0 + ","})
-        result.removeLast()
-        return result
-    }
-    
 }

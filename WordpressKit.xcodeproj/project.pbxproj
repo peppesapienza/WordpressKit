@@ -23,6 +23,8 @@
 		F484986A22E066DA002E8546 /* ResponseError.swift in Sources */ = {isa = PBXBuildFile; fileRef = F484986722E066DA002E8546 /* ResponseError.swift */; };
 		F484986B22E066DA002E8546 /* Endpoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = F484986822E066DA002E8546 /* Endpoint.swift */; };
 		F4CBF6EC2364421D00322702 /* WordpressSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4CBF6EB2364421D00322702 /* WordpressSession.swift */; };
+		F4E53A17236CFD070003F252 /* Result.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4E53A16236CFD070003F252 /* Result.swift */; };
+		F4E53A19236DAF200003F252 /* GetTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4E53A18236DAF200003F252 /* GetTask.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -55,6 +57,8 @@
 		F484986722E066DA002E8546 /* ResponseError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ResponseError.swift; sourceTree = "<group>"; };
 		F484986822E066DA002E8546 /* Endpoint.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Endpoint.swift; sourceTree = "<group>"; };
 		F4CBF6EB2364421D00322702 /* WordpressSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WordpressSession.swift; sourceTree = "<group>"; };
+		F4E53A16236CFD070003F252 /* Result.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Result.swift; sourceTree = "<group>"; };
+		F4E53A18236DAF200003F252 /* GetTask.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetTask.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -135,6 +139,8 @@
 				F484985D22E066AE002E8546 /* Handlers.swift */,
 				F484985E22E066AE002E8546 /* Media.swift */,
 				F484985F22E066AE002E8546 /* Post.swift */,
+				F4E53A16236CFD070003F252 /* Result.swift */,
+				F4E53A18236DAF200003F252 /* GetTask.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -277,11 +283,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				E30E033420C703A1002DC3EE /* Wordpress.swift in Sources */,
+				F4E53A17236CFD070003F252 /* Result.swift in Sources */,
 				E3777BC720D469890090E692 /* SessionManager.swift in Sources */,
 				F433A1242366DEBC0035265F /* RequestHandler.swift in Sources */,
 				E3B8963F229059FC0015C2E5 /* FinalPath.swift in Sources */,
 				E30E034020C7DCB9002DC3EE /* GetSession.swift in Sources */,
 				F484986B22E066DA002E8546 /* Endpoint.swift in Sources */,
+				F4E53A19236DAF200003F252 /* GetTask.swift in Sources */,
 				F4CBF6EC2364421D00322702 /* WordpressSession.swift in Sources */,
 				F484986A22E066DA002E8546 /* ResponseError.swift in Sources */,
 				F484986122E066AE002E8546 /* Media.swift in Sources */,
