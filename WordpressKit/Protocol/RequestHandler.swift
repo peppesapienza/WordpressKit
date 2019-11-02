@@ -8,11 +8,24 @@
 
 import Foundation
 
-protocol WordpressRequestHandler {
+protocol WordpressHandler: Equatable {
     associatedtype T
+    var id: UUID { get }
     var operation: (T) -> () { get set }
 }
 
-protocol WordpressRequestHandlerExecutable {
+protocol WordpressHandlerExecutable {
     func execute(data: Data?, error: Error?)
+}
+
+extension WordpressHandler {
+    var id: UUID {
+        UUID()
+    }
+}
+
+extension WordpressHandler {
+    static func ==(lhs: Self, rhs: Self) -> Bool {
+        lhs.id == rhs.id
+    }
 }

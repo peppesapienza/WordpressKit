@@ -16,25 +16,13 @@ class WordpressSessionManager: NSObject, URLSessionDataDelegate, URLSessionTaskD
     }
     
     fileprivate var delegate: WordpressSessionDelegate?
-    fileprivate var receivedData: Data?
     
     func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didReceive data: Data) {
-        guard receivedData != nil else {
-            receivedData = data
-            return
-        }
-
-        receivedData?.append(data)
+        delegate?.wordpressTask(task: dataTask, didReceive: data)
     }
-    
-    
-    func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: Error?) {
-        defer {
-            delegate = nil
-            session.invalidateAndCancel()
-        }
 
-        delegate?.wordpressTask(data: receivedData, didCompleteWith: error)
+    func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: Error?) {
+        delegate?.wordpressTask(task: task, didCompleteWith: error)
     }
     
     func urlSession(_ session: URLSession,

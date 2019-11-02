@@ -33,5 +33,7 @@ public protocol WordpressGetSession: WordpressSession {
 }
 
 protocol WordpressSessionDelegate {
-    func wordpressTask(data: Data?, didCompleteWith error: Error?)
+    func wordpressTask(task: URLSessionTask, didCompleteWith error: Error?)
+    func wordpressTask(task: URLSessionDataTask, didReceive data: Data)
 }
+

@@ -15,7 +15,7 @@ class WordpressGet: WordpressGetSession {
         self.endpoint = endpoint
         self.queries = WordpressQueryItems.init()
     }
-    
+        
     fileprivate let baseURL: URL
     fileprivate let endpoint: WordpressEndpoint
     fileprivate var queries: WordpressQueryItems
@@ -35,34 +35,30 @@ class WordpressGet: WordpressGetSession {
             delegate: sessionManager,
             delegateQueue: sessionQueue)
     }()
+        
+    fileprivate var tasks: [WordpressGetTask] = []
     
-    fileprivate var handlers: [WordpressRequestHandlerExecutable] = [] {
-        willSet {
-            resume()
-        }
-    }
-
     @discardableResult
     public func json(result: @escaping ResultHandler<Any>) -> Self {
-        handlers.append(JsonHandler(operation: result))
+        addHandlerToActiveTask(JsonHandler(operation: result))
         return self
     }
     
     @discardableResult
     public func string(result: @escaping ResultHandler<String>) -> Self {
-        handlers.append(StringHandler(operation: result))
+        addHandlerToActiveTask(StringHandler(operation: result))
         return self
     }
     
     @discardableResult
     public func data(result: @escaping ResultHandler<Data>) -> Self {
-        handlers.append(DataHandler(operation: result))
+        addHandlerToActiveTask(DataHandler(operation: result))
         return self
     }
     
     @discardableResult
     public func decode<T>(type: T.Type, result: @escaping ResultHandler<T>) -> Self where T: Decodable {
-        handlers.append(DecodeHandler(type: type, operation: result))
+        addHandlerToActiveTask(DecodeHandler(type: type, operation: result))
         return self
     }
     
@@ -83,15 +79,30 @@ class WordpressGet: WordpressGetSession {
         return try WordpressFinalPath(baseURL: baseURL, endpoint: endpoint, queries: queries.value()).url()
     }
     
-    fileprivate func resume() {
-        guard sessionDataTask == nil else { return }
+    fileprivate func createTask() throws -> WordpressGetTask {
+        let task = session.dataTask(with: URLRequest(url: try url()))
+        return WordpressGetTask(task: task)
+    }
+    
+    fileprivate func appendTask() {
         do {
-            sessionDataTask = session.dataTask(with: URLRequest(url: try url()))
-            sessionDataTask?.resume()
+            tasks.append(try createTask())
         } catch {
             print("[🤬][Error] \(error)")
         }
+    }
+    
+    fileprivate func addHandlerToActiveTask(_ handler: WordpressHandlerExecutable) {
+        guard
+            let task = tasks.first(where: { $0.state == .suspended || $0.state == .running })
+        else {
+            appendTask()
+            addHandlerToActiveTask(handler)
+            return
+        }
         
+        task.add(handler: handler)
+        task.resume()
     }
 
     deinit {
@@ -102,9 +113,12 @@ class WordpressGet: WordpressGetSession {
 
 
 extension WordpressGet: WordpressSessionDelegate {
+    func wordpressTask(task: URLSessionTask, didCompleteWith error: Error?) {
+        tasks.first(where: {$0.taskIdentifier == task.taskIdentifier })?.complete(with: error)
+    }
     
-    func wordpressTask(data: Data?, didCompleteWith error: Error?) {
-        self.handlers.forEach({ $0.execute(data: data, error: error) })
+    func wordpressTask(task: URLSessionDataTask, didReceive data: Data) {
+        tasks.first(where: {$0.taskIdentifier == task.taskIdentifier })?.received(data: data)
     }
     
 }
