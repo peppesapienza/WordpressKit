@@ -23,7 +23,7 @@ class Request: XCTestCase {
         let expectation = self.expectation(description: #function)
         
         self.wordpress.get(endpoint: .posts).string { result in
-            XCTAssertFalse(self.test_result(result: result).isEmpty)
+            self.test_result(result: result)
             expectation.fulfill()
         }
         
@@ -38,7 +38,7 @@ class Request: XCTestCase {
             .embed()
             .decode(type: [WordpressPost].self)
         { (result) in
-            XCTAssertFalse(self.test_result(result: result).isEmpty)
+            self.test_result(result: result)
             expectation.fulfill()
         }
         
@@ -55,7 +55,7 @@ class Request: XCTestCase {
             .query(key: .search, value: "casa")
             .decode(type: [WordpressPost].self)
         { (result) in
-            XCTAssertFalse(self.test_result(result: result).isEmpty)
+            self.test_result(result: result)
             expectation.fulfill()
         }
                 
@@ -70,7 +70,7 @@ class Request: XCTestCase {
             .embed()
             .decode(type: WordpressPost.self)
         { (result) in
-            XCTAssertFalse(self.test_result(result: result).title.rendered.isEmpty)
+            self.test_result(result: result)
             expectation.fulfill()
         }
         
@@ -81,45 +81,63 @@ class Request: XCTestCase {
         let expectation = self.expectation(description: #function)
 
         wordpress.get(endpoint: .media).json { result in
-            XCTAssert(self.test_result(result: result) is NSArray)
+            self.test_result(result: result)
             expectation.fulfill()
         }
         
         waitForExpectations(timeout: timeout, handler: nil)
     }
     
-    func test_sequence_request() {
+    func test_sequence_pages_request() {
         let expectation = self.expectation(description: #function)
         
         let session = wordpress.get(endpoint: .posts)
         
-        session.json(result: { XCTAssert(self.test_result(result: $0) is NSArray) })
-            .json(result: { XCTAssert(self.test_result(result: $0) is NSArray) })
-            .json(result: { XCTAssert(self.test_result(result: $0) is NSArray) })
-        
-        sleep(2)
-        
         session.decode(type: [WordpressPost].self)
         { (result) in
-            XCTAssertFalse(self.test_result(result: result).isEmpty)
-        }.data { (result) in
-            XCTAssertFalse(self.test_result(result: result).isEmpty)
+            self.test_result(result: result)
         }
         
         sleep(1)
         
-        session.string { result in
-            XCTAssertFalse(self.test_result(result: result).isEmpty)
+        session
+            .query(key: .page, value: "2")
+            .decode(type: [WordpressPost].self)
+        { (result) in
+            self.test_result(result: result)
+        }
+        
+        sleep(1)
+        
+        session
+            .query(key: .page, value: "3")
+            .decode(type: [WordpressPost].self)
+        { (result) in
+            self.test_result(result: result)
             expectation.fulfill()
         }
         
         waitForExpectations(timeout: timeout, handler: nil)
     }
     
-    func test_result<T>(result: WordpressResult<T>) -> T {
+    func test_session_invalidateAndCancel() {
+        let expectation = self.expectation(description: #function)
+        
+        wordpress
+            .get(endpoint: .posts)
+            .decode(type: [WordpressPost].self)
+        { (result) in
+            XCTAssertNotNil(result.error)
+            expectation.fulfill()
+        }
+        .invalidateAndCancel()
+        
+        waitForExpectations(timeout: timeout, handler: nil)
+    }
+    
+    func test_result<T>(result: WordpressResult<T>) {
         XCTAssertNotNil(result.value)
         XCTAssertNil(result.error, result.error!.localizedDescription)
-        return result.value!
     }
     
 }

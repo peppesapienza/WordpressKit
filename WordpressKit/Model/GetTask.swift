@@ -20,10 +20,17 @@ class WordpressGetTask {
     
     fileprivate var data: Data?
     fileprivate var error: Error?
-    
     fileprivate let task: URLSessionDataTask
     fileprivate var handlers: [WordpressHandlerExecutable] = []
     
+    fileprivate var originalRequest: URLRequest? {
+        task.originalRequest
+    }
+    
+    fileprivate var currentRequest: URLRequest? {
+        task.currentRequest
+    }
+
     func resume() {
         task.resume()
     }
