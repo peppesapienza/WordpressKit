@@ -10,6 +10,10 @@ import Foundation
 
 public protocol WordpressSession {
     typealias ResultHandler<T> = (WordpressResult<T>) -> ()
+    init(baseURL: URL, endpoint: WordpressEndpoint)
+    
+    @discardableResult
+    func invalidateAndCancel() -> Self
 }
 
 public protocol WordpressGetSession: WordpressSession {

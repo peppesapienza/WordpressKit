@@ -8,9 +8,9 @@
 
 import Foundation
 
-class WordpressGet: WordpressGetSession {
+open class WordpressGet: WordpressGetSession {
     
-    internal init(baseURL: URL, endpoint: WordpressEndpoint) {
+    required public init(baseURL: URL, endpoint: WordpressEndpoint) {
         self.baseURL = baseURL
         self.endpoint = endpoint
         self.queries = WordpressQueryItems.init()
@@ -22,7 +22,6 @@ class WordpressGet: WordpressGetSession {
     
     fileprivate lazy var sessionManager = WordpressSessionManager(delegate: self)
     fileprivate lazy var sessionQueue = OperationQueue()
-    fileprivate var sessionDataTask: URLSessionDataTask?
     
     fileprivate lazy var session: URLSession = {
         let configuration = URLSessionConfiguration.default
@@ -72,6 +71,13 @@ class WordpressGet: WordpressGetSession {
     @discardableResult
     public func embed() -> Self {
         queries.add(key: ._embed, value: "1")
+        return self
+    }
+    
+    @discardableResult
+    public func invalidateAndCancel() -> Self {
+        tasks.forEach({ $0.cancel() })
+        session.invalidateAndCancel()
         return self
     }
     
