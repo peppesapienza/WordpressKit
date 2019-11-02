@@ -16,7 +16,7 @@ class Request: XCTestCase {
     
     override func setUp() {
         super.setUp()
-        wordpress = Wordpress(root: "https://www.ilfattoquotidiano.it", namespace: "wp-json/wp/v2")
+        wordpress = Wordpress(domain: "https://www.ilfattoquotidiano.it/wp-json", namespace: "/wp/v2")
     }
     
     func test_posts_string() {

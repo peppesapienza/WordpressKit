@@ -9,22 +9,22 @@
 import Foundation
 import UIKit
 
-public class Wordpress {
+open class Wordpress {
     
-    public init(root: String, namespace: String = "/wp/v2") {
-        guard let root = URL.init(string: root) else {
+    public init(domain: String, namespace: String = "/wp/v2") {
+        guard let domain = URL(string: domain) else {
             fatalError(WordpressResponseError.rootNotConvertableToURL.localizedDescription)
         }
         
-        self.root = root
+        self.domain = domain
         self.namespace = namespace
     }
     
-    fileprivate let root: URL
+    fileprivate let domain: URL
     fileprivate let namespace: String
     
     func baseURL() -> URL {
-        return root.appendingPathComponent(namespace)
+        return domain.appendingPathComponent(namespace)
     }
     
     public func get(endpoint: WordpressEndpoint) -> WordpressGetSession {

@@ -11,7 +11,7 @@ import XCTest
 
 class RequestPathTests: XCTestCase {
     
-    let wordpress = Wordpress(root: "https://www.ilfattoquotidiano.it", namespace: "wp-json/wp/v2")
+    let wordpress = Wordpress(domain: "https://www.ilfattoquotidiano.it", namespace: "wp-json/wp/v2")
     
     override func setUp() {
         super.setUp()
