@@ -32,16 +32,16 @@ public enum WordpressQueryKey: String {
 }
 
 
-struct WordpressQueryItems {
+public struct WordpressQueryItems: Hashable {
     
     fileprivate var dict: [WordpressQueryKey: String] = [:]
     
-    mutating func add(key: WordpressQueryKey, value: String) {
+    public mutating func add(key: WordpressQueryKey, value: String) {
         dict.updateValue(value, forKey: key)
     }
     
-    func value() -> [URLQueryItem] {
-        dict.map({ URLQueryItem.init(name: $0.rawValue, value: $1) })
+    public func value() -> [URLQueryItem] {
+        return dict.map({ URLQueryItem.init(name: $0.rawValue, value: $1) })
     }
     
 }
