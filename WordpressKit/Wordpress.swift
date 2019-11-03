@@ -11,20 +11,20 @@ import UIKit
 
 open class Wordpress {
     
-    public init(domain: String, namespace: WordpressNamespace = .wp(v: .v2)) {
-        guard let domain = URL(string: domain) else {
+    public init(route: String, namespace: WordpressNamespace = .wp(v: .v2)) {
+        guard let route = URL(string: route) else {
             fatalError(WordpressResponseError.rootNotConvertableToURL.localizedDescription)
         }
         
-        self.domain = domain
+        self.route = route
         self.namespace = namespace
     }
     
-    fileprivate let domain: URL
+    fileprivate let route: URL
     fileprivate let namespace: WordpressNamespace
     
     public func baseURL() -> URL {
-        domain.appendingPathComponent(namespace.rawValue)
+        route.appendingPathComponent(namespace.rawValue)
     }
     
     public func get(endpoint: WordpressEndpoint) -> WordpressGetSession {

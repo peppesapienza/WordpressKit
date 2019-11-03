@@ -16,14 +16,14 @@ class RequestPathTests: XCTestCase {
     }
     
     func test_base_url() {
-        let wordpress = Wordpress(domain: "https://www.ilfattoquotidiano.it/wp-json", namespace: .custom(path: "wp/v2"))
+        let wordpress = Wordpress(route: "https://www.ilfattoquotidiano.it/wp-json", namespace: .custom(path: "wp/v2"))
         XCTAssertTrue(wordpress.baseURL().pathComponents.elementsEqual(["/", "wp-json", "wp", "v2"]))
     }
 
     
     func test_url_query() {
         do {
-            let wordpress = Wordpress(domain: "https://www.ilfattoquotidiano.it/wp-json/", namespace: .wp(v: .v2))
+            let wordpress = Wordpress(route: "https://www.ilfattoquotidiano.it/wp-json/", namespace: .wp(v: .v2))
             var items = WordpressQueryItems.init()
             items.add(key: ._embed, value: "1")
             items.add(key: .per_page, value: "10")
