@@ -3,6 +3,27 @@ Wordpress API | Swift framework
 
 WordpressKit helps you to handle Wordpress [REST API](https://developer.wordpress.org/rest-api/reference/) in an elegant and composable way. Its build on top of URLSession provided by the Foundation framework. 
 
+```swift
+Wordpress(route: "https://www.xcoding.it/wp-json", namespace: .wp(v: .v2))
+    .get(endpoint: .posts)
+    .query(key: .page, value: "2")
+    .query(key: .per_page, value: "5")
+    .embed()
+    .decode(type: [WordpressPost].self)
+{ (result) in  
+
+    guard let array = result.value else {
+        print(result.error!.localizedDescription)
+        return
+    }
+    
+    array.forEach({ print( $0.title.rendered ) })
+    
+}
+```
+
+# Usage # 
+
 ## Wordpress ##
 
 Everything starts from  `Wordpress` object which is responsible to create the `WordpressSession`. You can instantiate a Wordpress object by passing the REST API string URL to the `route` parameter and a case of `WordpressNamespace` to the `namespace` parameter.
