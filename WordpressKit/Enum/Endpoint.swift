@@ -45,11 +45,32 @@ extension WordpressEndpoint: RawRepresentable {
 
 public enum WordpressNamespace {
     case wp(v: Version)
+    case plugin(name: String, v: Version)
     case custom(path: String)
     
-    public enum Version: String {
-        case v1 = "v1"
-        case v2 = "v2"
+    public enum Version: RawRepresentable {
+        public typealias RawValue = String
+        
+        case v1
+        case v2
+        case v3
+        case v(x: String)
+        case custom(v: String)
+        
+        public init?(rawValue: RawValue) {
+            return nil
+        }
+        
+        public var rawValue: RawValue {
+            switch self {
+            case .v1: return "v1"
+            case .v2: return "v2"
+            case .v3: return "v3"
+            case .v(let x): return "v\(x)"
+            case .custom(let v): return v
+            }
+        }
+        
     }
 }
 
@@ -63,6 +84,7 @@ extension WordpressNamespace: RawRepresentable {
     public var rawValue: RawValue {
         switch self {
         case .wp(let v): return "wp/\(v.rawValue)"
+        case .plugin(let name, let v): return "\(name)/\(v.rawValue)"
         case .custom(let path): return path
         }
     }
