@@ -37,6 +37,7 @@ import WordpressKit
 
 let wp = Wordpress(route: "https://oursite.com/wp-json/", namespace: .wp(v: .v2))
 ```
+
 ### Custom WordpressNamespace ###
 
 This is the base form of a `Wordpress` instance creation. If your WP has another API configuration, for example you renamed the `wp-json` or you changed the default namespace, this is the definition of the `init`:
@@ -54,6 +55,7 @@ public enum WordpressNamespace {
     case custom(path: String)
 }
 ```
+
 So you can compose your API URL like these examples: 
 
 ```swift
@@ -67,4 +69,10 @@ Wordpress(route: "https://example.com/wp-json", namespace: .custom(path: "plugin
 Wordpress(route: "https://example.com/wp-json", namespace: .plugin(name: "my-plugin", v: .custom(v: "10")))
 ```
 
-## Making Request ##
+## Preparing a GET Session ##
+
+To perform a request with a `Wordpress` object first you must create a `WordpressGetSession` by passing to the `get` method a case of the `WordpressEndpoint`. 
+
+```swift
+public func get(endpoint: WordpressEndpoint) -> WordpressGetSession
+```
