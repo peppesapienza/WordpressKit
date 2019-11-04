@@ -1,7 +1,6 @@
 # WordpressKit
-Wordpress API | Swift framework
 
-WordpressKit helps you to handle Wordpress [REST API](https://developer.wordpress.org/rest-api/reference/) in an elegant and composable way. Its build on top of URLSession provided by the Foundation framework. 
+**WordpressKit helps you to handle Wordpress [REST API](https://developer.wordpress.org/rest-api/reference/) in an elegant and composable way**. 
 
 ```swift
 Wordpress(route: "https://www.xcoding.it/wp-json", namespace: .wp(v: .v2))
@@ -21,6 +20,8 @@ Wordpress(route: "https://www.xcoding.it/wp-json", namespace: .wp(v: .v2))
     
 }
 ```
+
+Its build on top of `URLSession` provided by the Foundation framework. 
 
 # Usage # 
 
@@ -69,10 +70,51 @@ Wordpress(route: "https://example.com/wp-json", namespace: .custom(path: "plugin
 Wordpress(route: "https://example.com/wp-json", namespace: .plugin(name: "my-plugin", v: .custom(v: "10")))
 ```
 
-## Preparing a GET Session ##
+## WordpressGetSession: Preparing a GET Session ##
 
-To perform a request with a `Wordpress` object first you must create a `WordpressGetSession` by passing to the `get` method a case of the `WordpressEndpoint`. 
+**To perform a request with a `Wordpress` object first you must create a `WordpressGetSession`** by passing to the `get` method a `WordpressEndpoint` case. 
 
 ```swift
 public func get(endpoint: WordpressEndpoint) -> WordpressGetSession
 ```
+
+So, **if you want to get the posts of your website your code would look like this:**
+
+```swift
+let wp = Wordpress(route: "https://www.xcoding.it/wp-json", namespace: .wp(v: .v2))
+let session = wp.get(endpoint: .posts)
+
+// or, in a more concise way
+
+Wordpress(route: "https://www.xcoding.it/wp-json", namespace: .wp(v: .v2))
+    .get(endpoint: .posts)
+```
+
+`WordpressGetSession` internally contains an `URLSession` property that is used to manage one or more `URLRequest` based on your `query` and `ResultHandler` usage. 
+
+For example, if you want to manage the `List` or `UITableView` pagination you can use a single `WordpressGetSession` and change the `.query(key: .page, value: "\(nextPage)")` at runtime. We will discuss this topic in the `query` paragraph. 
+
+### WordpressEndpoints ###
+
+At the moment the avaiable `WordpressEndpoints` are: 
+
+```swift
+public enum WordpressEndpoint {
+    case posts
+    case post(id: String)
+    case revisions
+    case categories
+    case tags
+    case pages
+    case comments
+    case taxonomies
+    case media
+    case users
+    case types
+    case statuses
+    case settings
+    case custom(path: String)
+}
+```
+
+
