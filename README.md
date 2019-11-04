@@ -27,9 +27,9 @@ Its build on top of `URLSession` provided by the Foundation framework.
 
 ## Wordpress ##
 
-Everything starts from  `Wordpress` object which is responsible to create the `WordpressSession`. You can instantiate a Wordpress object by passing the REST API string URL to the `route` parameter and a case of `WordpressNamespace` to the `namespace` parameter.
+Everything starts from  `Wordpress` object which is responsible to create the `WordpressSession`. You can instantiate a Wordpress object by passing: the REST API string URL to the `route` parameter and `WordpressNamespace` case to the `namespace` parameter.
 
-In a normal WP configuration, the `route` of the REST API is located under `https://oursite.com/wp-json/` and the core `namespace` is `/wp/v2/`. 
+> In a normal WP configuration, the `route` of the REST API is located under `https://oursite.com/wp-json/` and the core `namespace` is `/wp/v2/`. 
 
 So, with WordpressKit, **you can represent an instance of your Wordpress REST API by creating a `Wordpress` object like that**:
 
@@ -81,8 +81,8 @@ public func get(endpoint: WordpressEndpoint) -> WordpressGetSession
 So, **if you want to get the posts of your website your code would look like this:**
 
 ```swift
-let wp = Wordpress(route: "https://www.xcoding.it/wp-json", namespace: .wp(v: .v2))
-let session = wp.get(endpoint: .posts)
+let wp: Wordpress = Wordpress(route: "https://www.xcoding.it/wp-json", namespace: .wp(v: .v2))
+let session: WordpressGetSession = wp.get(endpoint: .posts)
 
 // or, in a more concise way
 
@@ -90,9 +90,21 @@ Wordpress(route: "https://www.xcoding.it/wp-json", namespace: .wp(v: .v2))
     .get(endpoint: .posts)
 ```
 
-`WordpressGetSession` internally contains an `URLSession` property that is used to manage one or more `URLRequest` based on your `query` and `ResultHandler` usage. 
+`WordpressGetSession` internally contains a `URLSession` property that is used to manage one or more `URLRequest` based on your `query` and `ResultHandler` usage. 
 
 For example, if you want to manage the `List` or `UITableView` pagination you can use a single `WordpressGetSession` and change the `.query(key: .page, value: "\(nextPage)")` at runtime. We will discuss this topic in the `query` paragraph. 
+
+### Making a Request ###
+
+To start the communication with your api, and so starting a real `URLRequest`, you need to use one of the `ResultHandler` methods of your `WordpressGetSession` object:
+
+```swift
+func json(result: @escaping ResultHandler<Any>) -> Self
+func string(result: @escaping ResultHandler<String>) -> Self
+func data(result: @escaping ResultHandler<Data>) -> Self
+func decode<T>(type: T.Type, result: @escaping ResultHandler<T>) -> Self where T: Decodable
+```
+
 
 ### WordpressEndpoints ###
 
@@ -116,5 +128,6 @@ public enum WordpressEndpoint {
     case custom(path: String)
 }
 ```
+The default names of the endpoints are taken from the [Wordpress Doc](https://developer.wordpress.org/rest-api/reference/). Actually, in this version of WordpressKit, some cases aren't covered but you can use the `.custom(path: String)` case to handle these missing. 
 
 
