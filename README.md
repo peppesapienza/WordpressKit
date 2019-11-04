@@ -94,7 +94,7 @@ Wordpress(route: "https://www.xcoding.it/wp-json", namespace: .wp(v: .v2))
 
 For example, if you want to manage the `List` or `UITableView` pagination you can use a single `WordpressGetSession` and change the `.query(key: .page, value: "\(nextPage)")` at runtime. We will discuss this topic in the `query` paragraph. 
 
-### Making a Request ###
+### Making a Request
 
 To start the communication with your api, and so starting a real `URLRequest`, you need to use one of the `ResultHandler` methods of your `WordpressGetSession` object:
 
@@ -104,6 +104,44 @@ func string(result: @escaping ResultHandler<String>) -> Self
 func data(result: @escaping ResultHandler<Data>) -> Self
 func decode<T>(type: T.Type, result: @escaping ResultHandler<T>) -> Self where T: Decodable
 ```
+
+A `ResultHandler` is an object composed by two properties: a `value: T?`and an `error: Error?`. So based on your handler method you will obtain a different result:
+
+```swift
+wp.session(endpoint: .posts).json { result in
+    guard let json = result.value else {
+        print(result.error!.localizedDescription)
+        return
+    }
+    
+    print(json is NSArray) 
+    print(json)
+}
+```
+
+Your action defined inside the closure will be fired when the request inside the session ends. 
+
+Since a `ResultHandler` method returns `self` you can combine more handler without problem:
+
+```swift
+wp
+    .session(endpoint: .posts)
+    .string { result in 
+        print("String Handler")
+    }
+    . data { result in 
+       print("Data Handler")
+    }
+```
+
+What will happen?
+
+1. The `.string` method will create a `WordpressGetTask` (that is a wrapper of an `URLSessionDataTask`) that will be started immediatly (with a `.resume()`).
+2. If there is a `WordpressGetTask`, inside the session, that is `.suspended` or `.running` the `.data` method handler will be added to the same task. 
+    1. In this case, since there is only one `WordpressGetTask` involved, both handlers will use the same `data` and `error` (before making the internal transformation of the `Data` to your chosen return value)
+3. If the previous task is ended a new task will be created. So a new `URLSessionDataTask` will be started. 
+
+It's important to note that **everything is execute asyncronously in a background thread** (you can use the `DispatchQueue.main.async {}` to run the code on the main thread). 
 
 
 ### WordpressEndpoints ###
