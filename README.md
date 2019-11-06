@@ -21,17 +21,17 @@ Wordpress(route: "https://www.xcoding.it/wp-json", namespace: .wp(v: .v2))
 }
 ```
 
-Its build on top of `URLSession` provided by the Foundation framework. 
+It's built on top of `URLSession` provided by the Foundation framework. 
 
 # Usage # 
 
 ## Wordpress ##
 
-Everything starts from  `Wordpress` object which is responsible to create the `WordpressSession`. You can instantiate a Wordpress object by passing: the REST API string URL to the `route` parameter and `WordpressNamespace` case to the `namespace` parameter.
+Everything starts from  `Wordpress` object which is responsible to create the `WordpressSession`. You can instantiate a Wordpress object by passing: from REST API string URL to the `route` parameter and `WordpressNamespace` case to the `namespace` parameter.
 
 > In a normal WP configuration, the `route` of the REST API is located under `https://oursite.com/wp-json/` and the core `namespace` is `/wp/v2/`. 
 
-So, with WordpressKit, **you can represent an instance of your Wordpress REST API by creating a `Wordpress` object like that**:
+So, with WordpressKit, **you can represent an instance of your Wordpress REST API by creating a `Wordpress` object like this**:
 
 ```swift
 import WordpressKit
@@ -41,7 +41,7 @@ let wp = Wordpress(route: "https://oursite.com/wp-json/", namespace: .wp(v: .v2)
 
 ### Custom WordpressNamespace ###
 
-This is the base form of a `Wordpress` instance creation. If your WP has another API configuration, for example you renamed the `wp-json` or you changed the default namespace, this is the definition of the `init`:
+This is the base form of a `Wordpress` instance creation. If your WP has another API configuration, for example you renamed the `wp-json` or you changed the default namespace, the definition of the `init` will be:
 
 ```swift
 Wordpress.init(route: String, namespace: WordpressNamespace = .wp(v: .v2)) 
@@ -57,7 +57,7 @@ public enum WordpressNamespace {
 }
 ```
 
-So you can compose your API URL like these examples: 
+You can compose your API URL like these examples: 
 
 ```swift
 // https://example.com/api/plugin/v1
@@ -72,7 +72,7 @@ Wordpress(route: "https://example.com/wp-json", namespace: .plugin(name: "my-plu
 
 ## WordpressGetSession: Preparing a GET Session ##
 
-**To perform a request with a `Wordpress` object first you must create a `WordpressGetSession`** by passing to the `get` method a `WordpressEndpoint` case. 
+**To perform a request with a `Wordpress` object, first you must create a `WordpressGetSession`** by invoking the `get` method and passing to its `endpoint` parameter a `WordpressEndpoint` case. 
 
 ```swift
 public func get(endpoint: WordpressEndpoint) -> WordpressGetSession
