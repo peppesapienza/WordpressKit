@@ -72,13 +72,13 @@ Wordpress(route: "https://example.com/wp-json", namespace: .plugin(name: "my-plu
 
 ## WordpressGetSession: Preparing a GET Session ##
 
-**To perform a request with a `Wordpress` object, first you must create a `WordpressGetSession`** by invoking the `get` method and passing to its `endpoint` parameter a `WordpressEndpoint` case. 
+**To perform a request with a `Wordpress` object, first you must create a `WordpressGetSession`** by invoking the `get` method and passing the `WordpressEndpoint` case to its `endpoint` parameter. 
 
 ```swift
 public func get(endpoint: WordpressEndpoint) -> WordpressGetSession
 ```
 
-So, **if you want to get the posts of your website your code would look like this:**
+**If you want to get posts of your website, your code will look like this:**
 
 ```swift
 let wp: Wordpress = Wordpress(route: "https://www.xcoding.it/wp-json", namespace: .wp(v: .v2))
@@ -92,11 +92,11 @@ Wordpress(route: "https://www.xcoding.it/wp-json", namespace: .wp(v: .v2))
 
 `WordpressGetSession` internally contains a `URLSession` property that is used to manage one or more `URLRequest` based on your `query` and `ResultHandler` usage. 
 
-For example, if you want to manage the `List` or `UITableView` pagination you can use a single `WordpressGetSession` and change the `.query(key: .page, value: "\(nextPage)")` at runtime. We will discuss this topic in the `query` paragraph. 
+For example, if you want to manage the `List` or `UITableView` pagination you can use a single `WordpressGetSession` and change the `.query(key: .page, value: "\(nextPage)")` at runtime. We will discuss about this topic in the `query` paragraph. 
 
 ### Making a Request
 
-To start the communication with your api, and so starting a real `URLRequest`, you need to use one of the `ResultHandler` methods of your `WordpressGetSession` object:
+To start communicating with your API, and so starting a real `URLRequest`, you need to use one of the `ResultHandler` methods of your `WordpressGetSession` object:
 
 ```swift
 func json(result: @escaping ResultHandler<Any>) -> Self
@@ -105,7 +105,7 @@ func data(result: @escaping ResultHandler<Data>) -> Self
 func decode<T>(type: T.Type, result: @escaping ResultHandler<T>) -> Self where T: Decodable
 ```
 
-A `ResultHandler` is an object composed by two properties: a `value: T?`and an `error: Error?`. So based on your handler method you will obtain a different result:
+A `ResultHandler` is an object composed by two properties: a `value: T?`and an `error: Error?`. So based on your handler method, you will obtain a different result:
 
 ```swift
 wp.session(endpoint: .posts).json { result in
@@ -119,9 +119,9 @@ wp.session(endpoint: .posts).json { result in
 }
 ```
 
-Your action defined inside the closure will be fired when the request inside the session ends. 
+Your action defined inside the closure will be fired when the request in the session ends. 
 
-Since a `ResultHandler` method returns `self` you can combine more handler without problem:
+Considering that a `ResultHandler` method returns `self`, you can combine more handler without any problems:
 
 ```swift
 wp
@@ -129,24 +129,23 @@ wp
     .string { result in 
         print("String Handler")
     }
-    . data { result in 
+    .data { result in 
        print("Data Handler")
     }
 ```
 
 What will happen?
 
-1. The `.string` method will create a `WordpressGetTask` (that is a wrapper of an `URLSessionDataTask`) that will be started immediatly (with a `.resume()`).
-2. If there is a `WordpressGetTask`, inside the session, that is `.suspended` or `.running` the `.data` method handler will be added to the same task. 
+1. The `.string` method will create a `WordpressGetTask` (which is a wrapper of an `URLSessionDataTask`) that will start immediatly (with a `.resume()`).
+2. If there is a `WordpressGetTask` inside the session, that is `.suspended` or `.running`, the `.data` method handler will be added to the same task. 
     1. In this case, since there is only one `WordpressGetTask` involved, both handlers will use the same `data` and `error` (before making the internal transformation of the `Data` to your chosen return value)
-3. If the previous task is ended a new task will be created. So a new `URLSessionDataTask` will be started. 
+3. If the previous task ends, a new task will be created. Then, a new `URLSessionDataTask` will start. 
 
 It's important to note that **everything is execute asyncronously in a background thread** (you can use the `DispatchQueue.main.async {}` to run the code on the main thread). 
 
-
 ### WordpressEndpoints ###
 
-At the moment the avaiable `WordpressEndpoints` are: 
+At this moment the available version of `WordpressEndpoint` can contain these cases: 
 
 ```swift
 public enum WordpressEndpoint {
@@ -166,6 +165,7 @@ public enum WordpressEndpoint {
     case custom(path: String)
 }
 ```
-The default names of the endpoints are taken from the [Wordpress Doc](https://developer.wordpress.org/rest-api/reference/). Actually, in this version of WordpressKit, some cases aren't covered but you can use the `.custom(path: String)` case to handle these missing. 
+
+The default names of the endpoints are taken from the [Wordpress Doc](https://developer.wordpress.org/rest-api/reference/). Actually, in this version of WordpressKit, some cases aren't covered but you can use the `.custom(path: String)` case to handle these losses. 
 
 
