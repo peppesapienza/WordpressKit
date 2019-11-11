@@ -143,6 +143,16 @@ What will happen?
 
 It's important to note that **everything is execute asyncronously in a background thread** (you can use the `DispatchQueue.main.async {}` to run the code on the main thread). 
 
+### Codable Models ###
+
+WordpressKit contains several models that are useful when you want to decode your request results. The models represent the schema described inside the [Wordpress Doc](https://developer.wordpress.org/rest-api/reference/).
+
+Actually our framework contains the following models: `WordpressPost` and `WordpressMedia`. Both contain inner models that are used to describe nested properties. 
+
+
+
+ 
+
 ### WordpressEndpoints ###
 
 At this moment the available version of `WordpressEndpoint` can contain these cases: 
