@@ -136,9 +136,8 @@
 		F484985C22E066AE002E8546 /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				F4CE65F323782A8800098443 /* WP */,
 				F484985D22E066AE002E8546 /* Handlers.swift */,
-				F484985E22E066AE002E8546 /* Media.swift */,
-				F484985F22E066AE002E8546 /* Post.swift */,
 				F4E53A16236CFD070003F252 /* Result.swift */,
 				F4E53A18236DAF200003F252 /* GetTask.swift */,
 			);
@@ -169,6 +168,15 @@
 				F433A1232366DEBC0035265F /* RequestHandler.swift */,
 			);
 			path = Protocol;
+			sourceTree = "<group>";
+		};
+		F4CE65F323782A8800098443 /* WP */ = {
+			isa = PBXGroup;
+			children = (
+				F484985E22E066AE002E8546 /* Media.swift */,
+				F484985F22E066AE002E8546 /* Post.swift */,
+			);
+			path = WP;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
