@@ -25,8 +25,6 @@ It's built on top of `URLSession` provided by the Foundation framework.
 
 # Usage # 
 
-## Wordpress ##
-
 Everything starts from  `Wordpress` object which is responsible to create the `WordpressSession`. You can instantiate a Wordpress object by passing: from REST API string URL to the `route` parameter and `WordpressNamespace` case to the `namespace` parameter.
 
 > In a normal WP configuration, the `route` of the REST API is located under `https://oursite.com/wp-json/` and the core `namespace` is `/wp/v2/`. 
@@ -39,7 +37,7 @@ import WordpressKit
 let wp = Wordpress(route: "https://oursite.com/wp-json/", namespace: .wp(v: .v2))
 ```
 
-### Custom WordpressNamespace ###
+## Custom WordpressNamespace ##
 
 This is the base form of a `Wordpress` instance creation. If your WP has another API configuration, for example you renamed the `wp-json` or you changed the default namespace, the definition of the `init` will be:
 
@@ -143,15 +141,69 @@ What will happen?
 
 It's important to note that **everything is execute asyncronously in a background thread** (you can use the `DispatchQueue.main.async {}` to run the code on the main thread). 
 
-### Codable Models ###
+## Codable Models ##
 
 WordpressKit contains several models that are useful when you want to decode your request results. The models represent the schema described inside the [Wordpress Doc](https://developer.wordpress.org/rest-api/reference/).
 
 Actually our framework contains the following models: `WordpressPost` and `WordpressMedia`. Both contain inner models that are used to describe nested properties. 
 
+### WordpressPost ###
 
+`WordpressPost` is an **open class** that is conforms to `Codable` and describes the JSON representation of a wordpress's post. 
 
- 
+Useful links:
+
+- `WordpressPost` properties [here](WordpressKit/Model/WP/Post.swift).
+- Official Wordpress schema [here](https://developer.wordpress.org/rest-api/reference/posts/).
+
+You can use the `WordpressPost` model to decode a single post or an array of posts. 
+
+#### Decode a single post ####
+
+You can request a single post by using the `WordpressEndpoints.post(id: string)` case while creating the get session. Remember, **even if your post ID is an integer you have to pass it as a string**. 
+
+```swift
+wordpress
+    .get(endpoint: .post(id: "5508442"))
+    .decode(type: WordpressPost.self) 
+    { (result) in
+    
+        guard let post = result.value else {
+            print(result.error!.localizedDescription)
+            return
+        }
+
+        print(post.title.rendered)
+        print(post.id)
+        print(post.content.rendered)
+    }
+```
+
+#### Decode an array of posts #####
+
+To decode your posts you have to use the `.posts` endpoint and the `[WordpressPost].self` type. You will find your decoded posts inside the result handler value.
+
+```swift
+wordpress
+    .get(endpoint: .posts)
+    .decode(type: [WordpressPost].self)
+    { (result) in
+        if let posts = result.value {
+            for post in posts {
+                print(post.title.rendered)
+            }
+        }
+    }
+```
+
+#### Why my post is not correctly decoded ####
+
+`WordpressKit` is built to works in a common Wordpress environment. Probably, if your post is not correctly decoded it's because there is a trouble with the the post schema itself (example: some json key are lost).
+
+**To try to solve this problem some `WordpressPost` model properties are defined as `Optional`.** You can inspect this properties [here](WordpressKit/Model/WP/Post.swift).
+
+If you are not sure about your schema you can ispect it with [Postman](https://www.getpostman.com).
+
 
 ### WordpressEndpoints ###
 
@@ -177,5 +229,7 @@ public enum WordpressEndpoint {
 ```
 
 The default names of the endpoints are taken from the [Wordpress Doc](https://developer.wordpress.org/rest-api/reference/). Actually, in this version of WordpressKit, some cases aren't covered but you can use the `.custom(path: String)` case to handle these losses. 
+
+
 
 
