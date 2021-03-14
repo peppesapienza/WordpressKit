@@ -26,7 +26,7 @@ open class WordpressGet: WordpressGetSession {
     fileprivate lazy var session: URLSession = {
         let configuration = URLSessionConfiguration.default
         configuration.httpAdditionalHeaders = [
-            "Content-Type" : "application/json"
+            "Content-Type" : "application/json; charset=utf-8"
         ]
         
         return URLSession(
